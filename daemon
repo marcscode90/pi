@@ -1,0 +1,31 @@
+#!/sbin/openrc-run
+DAEMON_PATH=/home
+
+start()
+{
+    cd $DAEMON_PATH
+    nohup ./daemon.py >error.log 2>&1 &
+}
+
+stop()
+{
+    PID=`ps -ef | grep -v grep | grep -i "./daemon.py" | awk '{print $2}'`
+    kill -9 $PID
+}
+
+case "$1" in
+        'start')
+                start
+                ;;
+        'stop')
+                stop
+                ;;
+        'restart')
+        	stop
+		sleep 2
+                start
+                ;;
+        *)
+                start
+        ;;
+esac
